@@ -14,9 +14,13 @@ var valuesMap = {
 
 };
 
-app.post('/set/:key', function (req, res) {
-    console.log(req.params);
-    console.log(req.body);
+app.post('/set', function (req, res) {
+    for (let i in req.body) {
+        valuesMap[i] = {
+            value: req.body[i],
+            updated: (new Date()).getTime()
+        };
+    }
     res.send({
         result: 'success'
     });
@@ -25,9 +29,9 @@ app.post('/set/:key', function (req, res) {
 app.get('/get/:key', function (req, res) {
     let key = req.params.key;
     if (key in valuesMap) {
-        req.send(valuesMap[key]);
+        res.send(valuesMap[key]);
     } else {
-        req.send({
+        res.send({
             value: null
         });
     }
@@ -36,9 +40,9 @@ app.get('/get/:key', function (req, res) {
 app.get('/raw/:key', function (req, res) {
     let key = req.params.key;
     if (key in valuesMap) {
-        req.send(valuesMap[key].value);
+        res.send(valuesMap[key].value);
     } else {
-        req.send('');
+        res.send('');
     }
 });
 
