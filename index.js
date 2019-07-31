@@ -134,7 +134,7 @@ app.get('/graph/:key', function (req, res) {
     }
 
     if (numberDatas.length <= 1) {
-        ctx.lineTo(width - 1, max.floor(height / 2));
+        ctx.lineTo(width - 1, Math.floor(height / 2));
     } else {
         if (width > numberDatas.length) {
             pixWidth = Math.floor(width / numberDatas.length);
