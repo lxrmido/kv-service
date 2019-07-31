@@ -73,7 +73,7 @@ app.get('/get/:key', function (req, res) {
     }
 });
 
-app.get('/changes/:key', function (req, res) {
+app.get('/today/:key', function (req, res) {
     let key = req.params.key;
     if (key in daily.changes) {
         res.send({
@@ -86,7 +86,7 @@ app.get('/changes/:key', function (req, res) {
     }
 });
 
-app.get('/today/:key', function (req, res) {
+app.get('/changes/:key', function (req, res) {
     let key = req.params.key;
     if (key in changesMap) {
         res.send({
