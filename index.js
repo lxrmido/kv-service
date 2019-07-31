@@ -159,7 +159,7 @@ function addChange(key){
         changesMap[key] = [];
     } else {
         if (changesMap[key].length >= config.changesLimit) {
-            changesMap[key].splice(0, values.length - config.changesLimit + 1);
+            changesMap[key].splice(0, changesMap[key].length - config.changesLimit + 1);
         }
     }
     changesMap[key].push(valuesMap[key]);
