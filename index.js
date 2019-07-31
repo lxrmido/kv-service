@@ -117,31 +117,54 @@ app.get('/graph/:key', function (req, res) {
     let ctx = cvs.getContext('2d');
     let calcValues = [];
     let pixWidth = 1, pixHeight = 1;
-    if (width > datas.length) {
-        pixWidth = Math.floor(width / datas.length);
-        calcValues = datas.map((a) => a.value);
-    } else {
-        let valsPerPix = Math.floor(datas.length / width);
-        let cx = 0;
-        while (cx < width) {
-            let subGroup = datas.slice(cx * valsPerPix, cx * valsPerPix + valsPerPix).map(a => a.value);
-            if (subGroup.length > 0) {
-                calcValues.push(Math.round(subGroup.reduce((a, b) => a + b) / subGroup.length));
-            }
-            cx ++;
-        }
-    }
-    let minValue = Math.min(...calcValues);
-    let maxValue = Math.max(...calcValues);
-    let scaleY   = height / (maxValue - minValue);
+
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
+
     ctx.strokeStyle = '#000000';
     ctx.beginPath();
-    for (let i = 0; i < calcValues.length; i ++) {
-        ctx.lineTo(pixWidth * i, Math.floor(scaleY * (maxValue - calcValues[i])));
+
+    let numberDatas = [];
+
+    for (let i = 0; i < datas.length; i ++) {
+        if (isNaN(datas[i].value)) {
+            continue;
+        }
+        numberDatas.push(parseFloat(datas[i].value));
     }
+
+    if (numberDatas.length <= 1) {
+        ctx.lineTo(width - 1, max.floor(height / 2));
+    } else {
+        if (width > numberDatas.length) {
+            pixWidth = Math.floor(width / numberDatas.length);
+            calcValues = numberDatas;
+        } else {
+            let valsPerPix = Math.floor(numberDatas.length / width);
+            let cx = 0;
+            while (cx < width) {
+                let subGroup = numberDatas.slice(cx * valsPerPix, cx * valsPerPix + valsPerPix);
+                if (subGroup.length > 0) {
+                    calcValues.push(Math.round(subGroup.reduce((a, b) => a + b) / subGroup.length));
+                }
+                cx ++;
+            }
+        }
+        let minValue = Math.min(...calcValues);
+        let maxValue = Math.max(...calcValues);
+        
+        if (minValue == maxValue) {
+            ctx.lineTo(width - 1, max.floor(height / 2));
+        } else {
+            let scaleY = height / (maxValue - minValue);
+            for (let i = 0; i < calcValues.length; i ++) {
+                ctx.lineTo(pixWidth * i, Math.floor(scaleY * (maxValue - calcValues[i])));
+            }
+        }
+    }
+    
     ctx.stroke();
+
     let img = cvs.toBuffer('image/jpeg', {quality: 1});
     res.writeHead(200, {
         'Content-Type': 'image/jpeg',
