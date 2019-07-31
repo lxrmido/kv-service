@@ -154,7 +154,7 @@ app.get('/graph/:key', function (req, res) {
         let maxValue = Math.max(...calcValues);
         
         if (minValue == maxValue) {
-            ctx.lineTo(width - 1, max.floor(height / 2));
+            ctx.lineTo(width - 1, Math.floor(height / 2));
         } else {
             let scaleY = height / (maxValue - minValue);
             for (let i = 0; i < calcValues.length; i ++) {
