@@ -123,7 +123,6 @@ app.get('/graph/:key', function (req, res) {
 
     ctx.strokeStyle = '#000000';
     ctx.beginPath();
-    ctx.moveTo(0, 0);
 
     let numberDatas = [];
 
@@ -135,6 +134,7 @@ app.get('/graph/:key', function (req, res) {
     }
 
     if (numberDatas.length <= 1) {
+        ctx.moveTo(0, 0);
         ctx.lineTo(width - 1, Math.floor(height / 2));
     } else {
         if (width > numberDatas.length) {
@@ -155,6 +155,7 @@ app.get('/graph/:key', function (req, res) {
         let maxValue = Math.max(...calcValues);
         
         if (minValue == maxValue) {
+            ctx.moveTo(0, 0);
             ctx.lineTo(width - 1, Math.floor(height / 2));
         } else {
             let scaleY = height / (maxValue - minValue);
