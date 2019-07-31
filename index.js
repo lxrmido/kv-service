@@ -3,6 +3,7 @@ var express = require('express');
 var bodyParser = require("body-parser");
 var fs = require('fs');
 var app = express();
+var canvas = require('canvas');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -96,6 +97,57 @@ app.get('/today/:key', function (req, res) {
             changes: []
         });
     }
+});
+
+app.get('/graph/:key', function (req, res) {
+    let width  = 800;
+    let height = 600;
+    if (req.query.width && req.query.width > 0) {
+        width = parseInt(req.query.width);
+    }
+    if (req.query.height && req.query.height > 0) {
+        height = parseInt(req.query.height);
+    }
+    let key   = req.params.key;
+    let datas = [];
+    if (key in changesMap) {
+        datas = changesMap[key];
+    }
+    let cvs = canvas.createCanvas(width, height);
+    let ctx = cvs.getContext('2d');
+    let calcValues = [];
+    let pixWidth = 1, pixHeight = 1;
+    if (width > datas.length) {
+        pixWidth = Math.floor(width / datas.length);
+        calcValues = datas.map((a) => a.value);
+    } else {
+        let valsPerPix = Math.floor(datas.length / width);
+        let cx = 0;
+        while (cx < width) {
+            let subGroup = datas.slice(cx * valsPerPix, cx * valsPerPix + valsPerPix).map(a => a.value);
+            if (subGroup.length > 0) {
+                calcValues.push(Math.round(subGroup.reduce((a, b) => a + b) / subGroup.length));
+            }
+            cx ++;
+        }
+    }
+    let minValue = Math.min(...calcValues);
+    let maxValue = Math.max(...calcValues);
+    let scaleY   = height / (maxValue - minValue);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#000000';
+    ctx.beginPath();
+    for (let i = 0; i < calcValues.length; i ++) {
+        ctx.lineTo(pixWidth * i, Math.floor(scaleY * (maxValue - calcValues[i])));
+    }
+    ctx.stroke();
+    let img = cvs.toBuffer('image/jpeg', {quality: 1});
+    res.writeHead(200, {
+        'Content-Type': 'image/jpeg',
+        'Content-Length': img.length
+    });
+    res.end(img); 
 });
 
 app.listen(config.servicePort, function () {
