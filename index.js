@@ -123,6 +123,7 @@ app.get('/graph/:key', function (req, res) {
 
     ctx.strokeStyle = '#000000';
     ctx.beginPath();
+    ctx.moveTo(0, 0);
 
     let numberDatas = [];
 
