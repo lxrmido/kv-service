@@ -108,6 +108,7 @@ app.get('/graph/:key', function (req, res) {
     if (req.query.height && req.query.height > 0) {
         height = parseInt(req.query.height);
     }
+    let showText = !!req.query.showtext;
     let key   = req.params.key;
     let datas = [];
     if (key in changesMap) {
@@ -163,9 +164,24 @@ app.get('/graph/:key', function (req, res) {
                 ctx.lineTo(pixWidth * i, Math.floor(scaleY * (maxValue - calcValues[i])));
             }
         }
+        ctx.stroke();
+
+        if (showText) {
+            let text = numberDatas[numberDatas.length - 1] + ' / (' + Math.min(...numberDatas) + ', ' + Math.max(...numberDatas) + ')';
+    
+            ctx.font = 'bold 20px serif';
+            ctx.textBaseline = 'top';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(text, 6, 6);
+            ctx.fillText(text, 2, 2);
+            ctx.fillStyle = '#000000';
+            ctx.fillText(text, 4, 4);
+        }
+
+
     }
     
-    ctx.stroke();
+    
 
     let img = cvs.toBuffer('image/jpeg', {quality: 1});
     res.writeHead(200, {
