@@ -178,6 +178,8 @@ app.get('/graph/:key', function (req, res) {
             ctx.fillStyle = '#ffffff';
             ctx.fillText(text, 6, 6);
             ctx.fillText(text, 2, 2);
+            ctx.fillText(dateText, 6, 28);
+            ctx.fillText(dateText, 2, 24);
             ctx.fillStyle = '#000000';
             ctx.fillText(text, 4, 4);
             ctx.fillText(dateText, 4, 26);
