@@ -126,12 +126,14 @@ app.get('/graph/:key', function (req, res) {
     ctx.beginPath();
 
     let numberDatas = [];
+    let lastUpdate = 0;
 
     for (let i = 0; i < datas.length; i ++) {
         if (isNaN(datas[i].value)) {
             continue;
         }
         numberDatas.push(parseFloat(datas[i].value));
+        lastUpdate = datas[i].updated;
     }
 
     if (numberDatas.length <= 1) {
@@ -168,7 +170,8 @@ app.get('/graph/:key', function (req, res) {
 
         if (showText) {
             let text = numberDatas[numberDatas.length - 1] + ' / (' + Math.min(...numberDatas) + ', ' + Math.max(...numberDatas) + ')';
-    
+            let date = new Date(lastUpdate);
+            let dateText = (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHour() + ':' + date.getMinute();
             ctx.font = 'bold 20px serif';
             ctx.textBaseline = 'top';
             ctx.fillStyle = '#ffffff';
@@ -176,6 +179,7 @@ app.get('/graph/:key', function (req, res) {
             ctx.fillText(text, 2, 2);
             ctx.fillStyle = '#000000';
             ctx.fillText(text, 4, 4);
+            ctx.fillText(dateText, 4, 24);
         }
 
 
