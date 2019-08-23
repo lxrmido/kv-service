@@ -169,9 +169,10 @@ app.get('/graph/:key', function (req, res) {
         ctx.stroke();
 
         if (showText) {
+            let leftpad = x => x > 9 ? x : '0' + x;
             let text = numberDatas[numberDatas.length - 1] + ' / (' + Math.min(...numberDatas) + ', ' + Math.max(...numberDatas) + ')';
             let date = new Date(lastUpdate);
-            let dateText = (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
+            let dateText = leftpad(date.getMonth() + 1) + '-' + leftpad(date.getDate()) + ' ' + leftpad(date.getHours()) + ':' + leftpad(date.getMinutes());
             ctx.font = 'bold 20px serif';
             ctx.textBaseline = 'top';
             ctx.fillStyle = '#ffffff';
@@ -179,7 +180,7 @@ app.get('/graph/:key', function (req, res) {
             ctx.fillText(text, 2, 2);
             ctx.fillStyle = '#000000';
             ctx.fillText(text, 4, 4);
-            ctx.fillText(dateText, 4, 24);
+            ctx.fillText(dateText, 4, 26);
         }
 
 
