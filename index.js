@@ -171,7 +171,7 @@ app.get('/graph/:key', function (req, res) {
         if (showText) {
             let text = numberDatas[numberDatas.length - 1] + ' / (' + Math.min(...numberDatas) + ', ' + Math.max(...numberDatas) + ')';
             let date = new Date(lastUpdate);
-            let dateText = (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHour() + ':' + date.getMinute();
+            let dateText = (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
             ctx.font = 'bold 20px serif';
             ctx.textBaseline = 'top';
             ctx.fillStyle = '#ffffff';
