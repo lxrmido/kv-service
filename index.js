@@ -172,7 +172,7 @@ app.get('/graph/:key', function (req, res) {
             let leftpad = x => x > 9 ? x : '0' + x;
             let text = numberDatas[numberDatas.length - 1] + ' / (' + Math.min(...numberDatas) + ', ' + Math.max(...numberDatas) + ')';
             let date = new Date(lastUpdate);
-            let dateText = leftpad(date.getMonth() + 1) + '-' + leftpad(date.getDate()) + ' ' + leftpad(date.getHours()) + ':' + leftpad(date.getMinutes());
+            let dateText = leftpad(date.getMonth() + 1) + '-' + leftpad(date.getDate()) + ' ' + leftpad(date.getHours()) + ':' + leftpad(date.getMinutes()) + ':' + leftpad(date.getSeconds());
             ctx.font = 'bold 20px serif';
             ctx.textBaseline = 'top';
             ctx.fillStyle = '#ffffff';
